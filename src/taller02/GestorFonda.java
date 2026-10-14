@@ -71,7 +71,8 @@ public class GestorFonda {
             System.out.println("   Se iniciara el programa sin registros previos.");
         }
     }
-     public static boolean guardarConsumidos() {
+
+    public static boolean guardarConsumidos() {
         try {
             FileWriter fw = new FileWriter("Consumido.txt");
             BufferedWriter escritor = new BufferedWriter(fw);
@@ -152,5 +153,157 @@ public class GestorFonda {
         System.out.println("--------------------------------------------------");
         System.out.println("  Total: " + cantTerremotos + " terremotos registrados (" + redondear(totalLitros) + " L)");
         System.out.println("==================================================");
+    }
+
+    public static void agregarRegistro(Scanner scanner) {
+        boolean check;
+        if (totalRegistros() >= 200) {
+            System.out.println();
+            System.out.println(">> Error: se alcanzo la capacidad maxima de registros (200).");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("Tipo de registro:");
+        System.out.println("  [1] Choripan");
+        System.out.println("  [2] Terremoto");
+        System.out.println("  [3] Cancelar");
+        System.out.print("Seleccione una opcion: ");
+        String opStr = scanner.nextLine();
+
+        if (opStr.equals("")) {
+            System.out.println(">> Error: no ingreso ninguna opcion.");
+            return;
+        }
+        if (opStr.equals("3")) {
+            return;
+        }
+        if (opStr.equals("1") == false && opStr.equals("2") == false) {
+            System.out.println(">> Error: opcion invalida.");
+            return;
+        }
+
+        if (cantParticipantes == 0) {
+            System.out.println(">> Error: No hay participantes cargados.");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("Consumidores disponibles:");
+        mostrarParticipantes();
+        System.out.print("Seleccione el consumidor: ");
+        String cIndexStr = scanner.nextLine();
+        if (cIndexStr.equals("")) {
+            System.out.println(">> Error: no ingreso ninguna opcion.");
+            return;
+        }
+        int cIndex = -1;
+        try {
+            cIndex = Integer.parseInt(cIndexStr) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println(">> Error: debe ingresar un numero valido.");
+            return;
+        }
+
+        if (cIndex < 0 || cIndex >= cantParticipantes) {
+            System.out.println(">> Error: consumidor no valido.");
+            return;
+        }
+        String consumidor = participantes[cIndex].getNombre();
+
+        if (opStr.equals("1")) {
+            System.out.print("Largo del choripan (cm): ");
+            String largoStr = scanner.nextLine();
+            if (largoStr.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            double largo = 0;
+            try {
+                largo = Double.parseDouble(largoStr);
+            } catch (NumberFormatException e) {
+                System.out.println(">> Error: debe ingresar un numero valido para el largo.");
+                return;
+            }
+            if (largo <= 0) {
+                System.out.println(">> Error: el largo debe ser mayor a 0.");
+                return;
+            }
+
+            System.out.print("Ancho del choripan (cm): ");
+            String anchoStr = scanner.nextLine();
+            if (anchoStr.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            double ancho = 0;
+            try {
+                ancho = Double.parseDouble(anchoStr);
+            } catch (NumberFormatException e) {
+                System.out.println(">> Error: debe ingresar un numero valido para el ancho.");
+                return;
+            }
+            if (ancho <= 0) {
+                System.out.println(">> Error: el ancho debe ser mayor a 0.");
+                return;
+            }
+
+            System.out.print("Fecha (YYYY-MM-DD): ");
+            String fecha = scanner.nextLine();
+            if (fecha.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            if (validarFecha(fecha) == false) {
+                System.out.println(">> Error: formato de fecha invalido. Debe ser YYYY-MM-DD.");
+                return;
+            }
+
+            choripanes[cantChoripanes] = new Choripan(consumidor, largo, ancho, fecha);
+            cantChoripanes++;
+            check = guardarConsumidos();
+            if (check){
+                System.out.println();
+                System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+            }
+            
+        } else {
+            System.out.print("Litros del terremoto: ");
+            String litrosStr = scanner.nextLine();
+            if (litrosStr.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            double litros = 0;
+            try {
+                litros = Double.parseDouble(litrosStr);
+            } catch (NumberFormatException e) {
+                System.out.println(">> Error: debe ingresar un numero valido para los litros.");
+                return;
+            }
+            if (litros <= 0) {
+                System.out.println(">> Error: los litros deben ser mayores a 0.");
+                return;
+            }
+
+            System.out.print("Fecha (YYYY-MM-DD): ");
+            String fecha = scanner.nextLine();
+            if (fecha.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            if (validarFecha(fecha) == false) {
+                System.out.println(">> Error: formato de fecha invalido. Debe ser YYYY-MM-DD.");
+                return;
+            }
+
+            terremotos[cantTerremotos] = new Terremoto(consumidor, litros, fecha);
+            cantTerremotos++;
+            check = guardarConsumidos();
+            if (check){
+                System.out.println();
+                System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+            }
+        }
     }
 }
