@@ -71,4 +71,86 @@ public class GestorFonda {
             System.out.println("   Se iniciara el programa sin registros previos.");
         }
     }
+     public static boolean guardarConsumidos() {
+        try {
+            FileWriter fw = new FileWriter("Consumido.txt");
+            BufferedWriter escritor = new BufferedWriter(fw);
+            for (int i = 0; i < cantChoripanes; i++) {
+                escritor.write(choripanes[i].aLineaArchivo());
+                escritor.newLine();
+            }
+            for (int i = 0; i < cantTerremotos; i++) {
+                escritor.write(terremotos[i].aLineaArchivo());
+                escritor.newLine();
+            }
+            escritor.close();
+            return true;
+        } catch (IOException e) {
+            System.out.println(">> Error al guardar en Consumido.txt");
+            return false;
+        }
+    }
+
+    public static int totalRegistros() {
+        return cantChoripanes + cantTerremotos;
+    }
+
+    public static double redondear(double valor) {
+        return (double) Math.round(valor * 100.0) / 100.0;
+    }
+
+    public static boolean validarFecha(String fecha) {
+        if (fecha.length() != 10) {
+            return false;
+        }
+        String[] partes = fecha.split("-");
+        if (partes.length != 3) {
+            return false;
+        }
+        try {
+            int anio = Integer.parseInt(partes[0]);
+            int mes = Integer.parseInt(partes[1]);
+            int dia = Integer.parseInt(partes[2]);
+            if (anio < 1 || mes < 1 || mes > 12 || dia < 1 || dia > 31) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void mostrarParticipantes() {
+        for (int i = 0; i < cantParticipantes; i++) {
+            System.out.println("  [" + (i + 1) + "] " + participantes[i].getNombre());
+        }
+    }
+
+    public static void verChoripanes() {
+        System.out.println();
+        System.out.println("=============== CHORIPANES =================");
+        System.out.println("  #   Consumidor    Largo    Ancho    Fecha          KCal");
+        for (int i = 0; i < cantChoripanes; i++) {
+            Choripan c = choripanes[i];
+            System.out.println("  " + (i + 1) + "   " + c.getConsumidor() + "        " + c.getLargo() + " cm    " + c.getAncho() + " cm    " + c.getFecha() + "    " + redondear(c.calcularKcal()));
+        }
+        System.out.println("--------------------------------------------------");
+        System.out.println("  Total: " + cantChoripanes + " choripanes registrados");
+        System.out.println("==================================================");
+    }
+
+    public static void verTerremotos() {
+        System.out.println();
+        System.out.println("=============== TERREMOTOS =================");
+        System.out.println("  #   Consumidor    Litros   Fecha          KCal");
+        double totalLitros = 0;
+        for (int i = 0; i < cantTerremotos; i++) {
+            Terremoto t = terremotos[i];
+            totalLitros = totalLitros + t.getLitros();
+            System.out.println("  " + (i + 1) + "   " + t.getConsumidor() + "        " + t.getLitros() + " L    " + t.getFecha() + "    " + redondear(t.calcularKcal()));
+        }
+        System.out.println("--------------------------------------------------");
+        System.out.println("  Total: " + cantTerremotos + " terremotos registrados (" + redondear(totalLitros) + " L)");
+        System.out.println("==================================================");
+    }
 }
