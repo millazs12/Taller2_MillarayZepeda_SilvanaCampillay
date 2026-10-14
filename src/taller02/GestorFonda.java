@@ -306,4 +306,227 @@ public class GestorFonda {
             }
         }
     }
+       public static void editarRegistro(Scanner scanner) {
+        boolean check;
+        System.out.println();
+        System.out.println("Tipo de registro a editar:");
+        System.out.println("  [1] Choripan");
+        System.out.println("  [2] Terremoto");
+        System.out.println("  [3] Cancelar");
+        System.out.print("Seleccione una opcion: ");
+        String op = scanner.nextLine();
+        if (op.equals("")) {
+            System.out.println(">> Error: no ingreso ninguna opcion.");
+            return;
+        }
+        if (op.equals("1")) {
+            if (cantChoripanes == 0) {
+                System.out.println(">> No hay choripanes registrados.");
+                return;
+            }
+            verChoripanes();
+            System.out.print("Seleccione el registro a editar (0 para cancelar): ");
+            String idxStr = scanner.nextLine();
+            if (idxStr.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            int idx = -1;
+            try {
+                idx = Integer.parseInt(idxStr);
+            } catch (NumberFormatException e) {
+                System.out.println(">> Error: debe ingresar un numero valido.");
+                return;
+            }
+            if (idx <= 0) {
+                return;
+            }
+            if (idx > cantChoripanes) {
+                System.out.println(">> Error: no existe un registro con ese numero. Intente nuevamente.");
+                return;
+            }
+            Choripan c = choripanes[idx - 1];
+            System.out.println("Registro actual -> Choripan | " + c.getConsumidor() + " | " + c.getLargo() + " cm | " + c.getAncho() + " cm | " + c.getFecha());
+            System.out.println("Deje el campo vacio para mantener el valor actual.");
+            System.out.print("Consumidor [" + c.getConsumidor() + "]: ");
+            String cons = scanner.nextLine();
+            if (cons.equals("") == false) {
+                c.setConsumidor(cons);
+            }
+            System.out.print("Largo [" + c.getLargo() + "]: ");
+            String lStr = scanner.nextLine();
+            if (lStr.equals("") == false) {
+                c.setLargo(Double.parseDouble(lStr));
+            }
+            System.out.print("Ancho [" + c.getAncho() + "]: ");
+            String aStr = scanner.nextLine();
+            if (aStr.equals("") == false) {
+                c.setAncho(Double.parseDouble(aStr));
+            }
+            System.out.print("Fecha [" + c.getFecha() + "]: ");
+            String f = scanner.nextLine();
+            if (f.equals("") == false) {
+                if (validarFecha(f) == false) {
+                    System.out.println(">> Error: formato de fecha invalido. No se actualizo la fecha.");
+                } else {
+                    c.setFecha(f);
+                }
+            }
+            check = guardarConsumidos();
+            if (check){
+                System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+            }
+        } else {
+            if (op.equals("2")) {
+                if (cantTerremotos == 0) {
+                    System.out.println(">> No hay terremotos registrados.");
+                    return;
+                }
+                verTerremotos();
+                System.out.print("Seleccione el registro a editar (0 para cancelar): ");
+                String idxStr = scanner.nextLine();
+                if (idxStr.equals("")) {
+                    System.out.println(">> Error: no ingreso ninguna opcion.");
+                    return;
+                }
+                int idx = -1;
+                try {
+                    idx = Integer.parseInt(idxStr);
+                } catch (NumberFormatException e) {
+                    System.out.println(">> Error: debe ingresar un numero valido.");
+                    return;
+                }
+                if (idx <= 0) {
+                    return;
+                }
+                if (idx > cantTerremotos) {
+                    System.out.println(">> Error: no existe un registro con ese numero. Intente nuevamente.");
+                    return;
+                }
+                Terremoto t = terremotos[idx - 1];
+                System.out.println("Registro actual -> Terremoto | " + t.getConsumidor() + " | " + t.getLitros() + " L | " + t.getFecha());
+                System.out.println("Deje el campo vacio para mantener el valor actual.");
+                System.out.print("Consumidor [" + t.getConsumidor() + "]: ");
+                String cons = scanner.nextLine();
+                if (cons.equals("") == false) {
+                    t.setConsumidor(cons);
+                }
+                System.out.print("Litros [" + t.getLitros() + "]: ");
+                String litStr = scanner.nextLine();
+                if (litStr.equals("") == false) {
+                    t.setLitros(Double.parseDouble(litStr));
+                }
+                System.out.print("Fecha [" + t.getFecha() + "]: ");
+                String f = scanner.nextLine();
+                if (f.equals("") == false) {
+                    if (validarFecha(f) == false) {
+                        System.out.println(">> Error: formato de fecha invalido. No se actualizo la fecha.");
+                    } else {
+                        t.setFecha(f);
+                    }
+                }
+                check = guardarConsumidos();
+                if(check){
+                    System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+                }
+            }
+        }
+    }
+    public static void eliminarRegistro(Scanner scanner) {
+        boolean check;
+        System.out.println();
+        System.out.println("Tipo de registro a eliminar:");
+        System.out.println("  [1] Choripan");
+        System.out.println("  [2] Terremoto");
+        System.out.println("  [3] Cancelar");
+        System.out.print("Seleccione una opcion: ");
+        String op = scanner.nextLine();
+        if (op.equals("")) {
+            System.out.println(">> Error: no ingreso ninguna opcion.");
+            return;
+        }
+        if (op.equals("1")) {
+            if (cantChoripanes == 0) {
+                System.out.println(">> No hay choripanes.");
+                return;
+            }
+            verChoripanes();
+            System.out.print("Seleccione el registro a eliminar (0 para cancelar): ");
+            String idxStr = scanner.nextLine();
+            if (idxStr.equals("")) {
+                System.out.println(">> Error: no ingreso ninguna opcion.");
+                return;
+            }
+            int idx = -1;
+            try {
+                idx = Integer.parseInt(idxStr);
+            } catch (NumberFormatException e) {
+                System.out.println(">> Error: debe ingresar un numero valido.");
+                return;
+            }
+            if (idx <= 0) {
+                return;
+            }
+            if (idx > cantChoripanes) {
+                System.out.println(">> Error: no existe un registro con ese numero.");
+                return;
+            }
+            Choripan c = choripanes[idx - 1];
+            System.out.print("Confirma la eliminacion de \"Choripan | " + c.getConsumidor() + " | " + c.getLargo() + " cm x " + c.getAncho() + " cm | " + c.getFecha() + "\"? (s/n): ");
+            String conf = scanner.nextLine();
+            if (conf.equalsIgnoreCase("s")) {
+                for (int i = idx - 1; i < cantChoripanes - 1; i++) {
+                    choripanes[i] = choripanes[i + 1];
+                }
+                choripanes[cantChoripanes - 1] = null;
+                cantChoripanes--;
+                check = guardarConsumidos();
+                if (check){
+                    System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+                }
+            }
+        } else {
+            if (op.equals("2")) {
+                if (cantTerremotos == 0) {
+                    System.out.println(">> No hay terremotos.");
+                    return;
+                }
+                verTerremotos();
+                System.out.print("Seleccione el registro a eliminar (0 para cancelar): ");
+                String idxStr = scanner.nextLine();
+                if (idxStr.equals("")) {
+                    System.out.println(">> Error: no ingreso ninguna opcion.");
+                    return;
+                }
+                int idx = -1;
+                try {
+                    idx = Integer.parseInt(idxStr);
+                } catch (NumberFormatException e) {
+                    System.out.println(">> Error: debe ingresar un numero valido.");
+                    return;
+                }
+                if (idx <= 0) {
+                    return;
+                }
+                if (idx > cantTerremotos) {
+                    System.out.println(">> Error: no existe un registro con ese numero.");
+                    return;
+                }
+                Terremoto t = terremotos[idx - 1];
+                System.out.print("Confirma la eliminacion de \"Terremoto | " + t.getConsumidor() + " | " + t.getLitros() + " L | " + t.getFecha() + "\"? (s/n): ");
+                String conf = scanner.nextLine();
+                if (conf.equalsIgnoreCase("s")) {
+                    for (int i = idx - 1; i < cantTerremotos - 1; i++) {
+                        terremotos[i] = terremotos[i + 1];
+                    }
+                    terremotos[cantTerremotos - 1] = null;
+                    cantTerremotos--;
+                    check = guardarConsumidos();
+                    if (check){
+                        System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+                    }
+                }
+            }
+        }
+    }
 }
