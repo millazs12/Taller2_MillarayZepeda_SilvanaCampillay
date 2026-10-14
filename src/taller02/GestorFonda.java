@@ -306,7 +306,8 @@ public class GestorFonda {
             }
         }
     }
-       public static void editarRegistro(Scanner scanner) {
+
+    public static void editarRegistro(Scanner scanner) {
         boolean check;
         System.out.println();
         System.out.println("Tipo de registro a editar:");
@@ -315,10 +316,12 @@ public class GestorFonda {
         System.out.println("  [3] Cancelar");
         System.out.print("Seleccione una opcion: ");
         String op = scanner.nextLine();
+
         if (op.equals("")) {
             System.out.println(">> Error: no ingreso ninguna opcion.");
             return;
         }
+
         if (op.equals("1")) {
             if (cantChoripanes == 0) {
                 System.out.println(">> No hay choripanes registrados.");
@@ -348,21 +351,25 @@ public class GestorFonda {
             Choripan c = choripanes[idx - 1];
             System.out.println("Registro actual -> Choripan | " + c.getConsumidor() + " | " + c.getLargo() + " cm | " + c.getAncho() + " cm | " + c.getFecha());
             System.out.println("Deje el campo vacio para mantener el valor actual.");
+
             System.out.print("Consumidor [" + c.getConsumidor() + "]: ");
             String cons = scanner.nextLine();
             if (cons.equals("") == false) {
                 c.setConsumidor(cons);
             }
+
             System.out.print("Largo [" + c.getLargo() + "]: ");
             String lStr = scanner.nextLine();
             if (lStr.equals("") == false) {
                 c.setLargo(Double.parseDouble(lStr));
             }
+
             System.out.print("Ancho [" + c.getAncho() + "]: ");
             String aStr = scanner.nextLine();
             if (aStr.equals("") == false) {
                 c.setAncho(Double.parseDouble(aStr));
             }
+
             System.out.print("Fecha [" + c.getFecha() + "]: ");
             String f = scanner.nextLine();
             if (f.equals("") == false) {
@@ -372,10 +379,12 @@ public class GestorFonda {
                     c.setFecha(f);
                 }
             }
+
             check = guardarConsumidos();
             if (check){
                 System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
             }
+
         } else {
             if (op.equals("2")) {
                 if (cantTerremotos == 0) {
@@ -406,16 +415,19 @@ public class GestorFonda {
                 Terremoto t = terremotos[idx - 1];
                 System.out.println("Registro actual -> Terremoto | " + t.getConsumidor() + " | " + t.getLitros() + " L | " + t.getFecha());
                 System.out.println("Deje el campo vacio para mantener el valor actual.");
+
                 System.out.print("Consumidor [" + t.getConsumidor() + "]: ");
                 String cons = scanner.nextLine();
                 if (cons.equals("") == false) {
                     t.setConsumidor(cons);
                 }
+
                 System.out.print("Litros [" + t.getLitros() + "]: ");
                 String litStr = scanner.nextLine();
                 if (litStr.equals("") == false) {
                     t.setLitros(Double.parseDouble(litStr));
                 }
+
                 System.out.print("Fecha [" + t.getFecha() + "]: ");
                 String f = scanner.nextLine();
                 if (f.equals("") == false) {
@@ -425,6 +437,7 @@ public class GestorFonda {
                         t.setFecha(f);
                     }
                 }
+
                 check = guardarConsumidos();
                 if(check){
                     System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
@@ -432,6 +445,7 @@ public class GestorFonda {
             }
         }
     }
+
     public static void eliminarRegistro(Scanner scanner) {
         boolean check;
         System.out.println();
@@ -441,10 +455,12 @@ public class GestorFonda {
         System.out.println("  [3] Cancelar");
         System.out.print("Seleccione una opcion: ");
         String op = scanner.nextLine();
+
         if (op.equals("")) {
             System.out.println(">> Error: no ingreso ninguna opcion.");
             return;
         }
+
         if (op.equals("1")) {
             if (cantChoripanes == 0) {
                 System.out.println(">> No hay choripanes.");
@@ -527,6 +543,95 @@ public class GestorFonda {
                     }
                 }
             }
+        }
+    }
+
+    public static void calcularTotalChoripanes() {
+        System.out.println();
+        System.out.println(">> Total de choripanes registrados: " + cantChoripanes);
+    }
+
+    public static void calcularTotalTerremotos() {
+        System.out.println();
+        System.out.println(">> Total de terremotos registrados: " + cantTerremotos);
+    }
+
+    public static void choripanesPorUsuario() {
+        System.out.println();
+        System.out.println("=== CHORIPANES POR USUARIO ===");
+        for (int i = 0; i < cantParticipantes; i++) {
+            String nombre = participantes[i].getNombre();
+            int cont = 0;
+            for (int j = 0; j < cantChoripanes; j++) {
+                if (choripanes[j].getConsumidor().equalsIgnoreCase(nombre)) {
+                    cont++;
+                }
+            }
+            System.out.println("  - " + nombre + ": " + cont + " choripanes");
+        }
+    }
+
+    public static void terremotosPorUsuario() {
+        System.out.println();
+        System.out.println("=== TERREMOTOS POR USUARIO ===");
+        for (int i = 0; i < cantParticipantes; i++) {
+            String nombre = participantes[i].getNombre();
+            int cont = 0;
+            double litrosTotales = 0;
+            for (int j = 0; j < cantTerremotos; j++) {
+                if (terremotos[j].getConsumidor().equalsIgnoreCase(nombre)) {
+                    cont++;
+                    litrosTotales += terremotos[j].getLitros();
+                }
+            }
+            System.out.println("  - " + nombre + ": " + cont + " terremotos (" + redondear(litrosTotales) + " L)");
+        }
+    }
+
+    public static void kcalPorUsuario() {
+        System.out.println();
+        System.out.println("=== KCAL CONSUMIDAS POR USUARIO ===");
+        for (int i = 0; i < cantParticipantes; i++) {
+            String nombre = participantes[i].getNombre();
+            double kcalTotales = 0;
+            for (int j = 0; j < cantChoripanes; j++) {
+                if (choripanes[j].getConsumidor().equalsIgnoreCase(nombre)) {
+                    kcalTotales += choripanes[j].calcularKcal();
+                }
+            }
+            for (int j = 0; j < cantTerremotos; j++) {
+                if (terremotos[j].getConsumidor().equalsIgnoreCase(nombre)) {
+                    kcalTotales += terremotos[j].calcularKcal();
+                }
+            }
+            System.out.println("  - " + nombre + ": " + redondear(kcalTotales) + " KCal");
+        }
+    }
+
+    public static void diasEbrioPorUsuario() {
+        System.out.println();
+        System.out.println("=== DIAS CON CONSUMO DE TERREMOTOS POR USUARIO ===");
+        for (int i = 0; i < cantParticipantes; i++) {
+            String nombre = participantes[i].getNombre();
+            String[] fechasUnicas = new String[100];
+            int cantFechas = 0;
+            for (int j = 0; j < cantTerremotos; j++) {
+                if (terremotos[j].getConsumidor().equalsIgnoreCase(nombre)) {
+                    String f = terremotos[j].getFecha();
+                    boolean encontrada = false;
+                    for (int k = 0; k < cantFechas; k++) {
+                        if (fechasUnicas[k].equals(f)) {
+                            encontrada = true;
+                            break;
+                        }
+                    }
+                    if (!encontrada) {
+                        fechasUnicas[cantFechas] = f;
+                        cantFechas++;
+                    }
+                }
+            }
+            System.out.println("  - " + nombre + ": " + cantFechas + " dias");
         }
     }
 }
